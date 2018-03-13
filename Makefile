@@ -114,6 +114,10 @@ endif
 
 ############### Source files configuration ################
 
+# Custom Application
+PROJ_OBJ += hello_cpp.o
+# PROJ_OBJ += hello.o
+
 # Init
 PROJ_OBJ += main.o
 PROJ_OBJ_CF2 += platform_cf2.o
@@ -138,7 +142,6 @@ PROJ_OBJ_CF2 +=  sensors_$(SENSORS).o
 PROJ_OBJ_CF2 += libdw1000.o libdw1000Spi.o
 
 # Modules
-PROJ_OBJ += hello.o
 PROJ_OBJ += system.o comm.o console.o pid.o crtpservice.o param.o
 PROJ_OBJ += log.o worker.o trigger.o sitaw.o queuemonitor.o msp.o
 PROJ_OBJ_CF2 += platformservice.o sound_cf2.o extrx.o sysload.o mem_cf2.o
@@ -276,6 +279,11 @@ CFLAGS += -ffunction-sections -fdata-sections
 # Prevent promoting floats to doubles
 CFLAGS += -Wdouble-promotion
 
+# C++ specific options
+CPP_OPT = -fno-rtti
+CPP_OPT += -std=gnu++11
+CPP_OPT += -fno-exceptions -fno-unwind-tables -fno-threadsafe-statics
+CPPFLAGS = $(subst -std=gnu11,,$(CFLAGS)) $(OPT) $(CPP_OPT)
 
 ASFLAGS = $(PROCESSOR) $(INCLUDES)
 LDFLAGS = --specs=nano.specs $(PROCESSOR) -Wl,-Map=$(PROG).map,--cref,--gc-sections,--undefined=uxTopUsedPriority
