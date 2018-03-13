@@ -43,9 +43,8 @@ endif
 
 ifeq ($(PLATFORM), CF2)
 # Now needed for SYSLINK
-CFLAGS += -DUSE_RADIOLINK_CRTP     # Set CRTP link to radio
-CFLAGS += -DENABLE_UART          # To enable the uart
-DEFS +=  -DUSE_RADIOLINK_CRTP -DENABLE_UART
+DEFS += -DUSE_RADIOLINK_CRTP     # Set CRTP link to radio
+DEFS += -DENABLE_UART          # To enable the uart
 REV               ?= D
 endif
 
@@ -184,12 +183,10 @@ PROJ_OBJ_CF2 += flowdeck.o
 PROJ_OBJ_CF2 += oa.o
 
 ifeq ($(LPS_TDOA_ENABLE), 1)
-CFLAGS += -DLPS_TDOA_ENABLE
 DEFS += -DLPS_TDOA_ENABLE
 endif
 
 ifeq ($(LPS_TDMA_ENABLE), 1)
-CFLAGS += -DLPS_TDMA_ENABLE
 DEFS += -DLPS_TDMA_ENABLE
 endif
 
@@ -242,7 +239,6 @@ INCLUDES_CF2 += -I$(LIB)/FatFS
 
 ifeq ($(USE_FPU), 1)
 	PROCESSOR = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
-	CFLAGS += -fno-math-errno -DARM_MATH_CM4 -D__FPU_PRESENT=1 -D__TARGET_FPU_VFP
 	OPT += -fno-math-errno
 	DEFS += -DARM_MATH_CM4 -D__FPU_PRESENT=1 -D__TARGET_FPU_VFP
 else
@@ -255,45 +251,48 @@ endif
 STFLAGS_CF2 = -DSTM32F4XX -DSTM32F40_41xxx -DHSE_VALUE=8000000 -DUSE_STDPERIPH_DRIVER
 
 ifeq ($(DEBUG), 1)
-  CFLAGS += -O0 -g3 -DDEBUG
   OPT += -O0 -g3 -DDEBUG
 else
 	# Fail on warnings
-  CFLAGS += -Os -g3 -Werror
   OPT += -Os -g3 -Werror
 endif
 
 ifeq ($(LTO), 1)
-  CFLAGS += -flto
   OPT += -flto
 endif
 
 ifeq ($(USE_ESKYLINK), 1)
-  CFLAGS += -DUSE_ESKYLINK
   DEFS += -DUSE_ESKYLINK
 endif
 
-CFLAGS += -DBOARD_REV_$(REV) -DESTIMATOR_NAME=$(ESTIMATOR)Estimator -DCONTROLLER_TYPE_$(CONTROLLER) -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
-DEFS +=  -DBOARD_REV_$(REV) -DESTIMATOR_NAME=$(ESTIMATOR)Estimator -DCONTROLLER_TYPE_$(CONTROLLER) -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
+DEFS += -DBOARD_REV_$(REV)
+DEFS += -DESTIMATOR_NAME=$(ESTIMATOR)Estimator
+DEFS += -DCONTROLLER_TYPE_$(CONTROLLER)
+DEFS += -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
 
 CFLAGS += $(PROCESSOR) $(INCLUDES) $(STFLAGS)
+CPPFLAGS += $(PROCESSOR) $(INCLUDES) $(STFLAGS)
 ifeq ($(PLATFORM), CF2)
-CFLAGS += $(INCLUDES_CF2) $(STFLAGS_CF2)
+CFLAGS += $(INCLUDES_CF2)
+CPPFLAGS += $(INCLUDES_CF2)
 DEFS += $(STFLAGS_CF2)
 endif
 
-CFLAGS += -Wall -Wmissing-braces -fno-strict-aliasing $(C_PROFILE) -std=gnu11
+DEFS += $(C_PROFILE)
+
+CFLAGS += -std=gnu11
+CFLAGS += -Wall -Wmissing-braces
+CPPWARN += -Wall -Wmissing-braces
 # Compiler flags to generate dependency files:
 CFLAGS += -MD -MP -MF $(BIN)/dep/$(@).d -MQ $(@)
-#Permits to remove un-used functions and global variables from output file
-CFLAGS += -ffunction-sections -fdata-sections
+CPPFLAGS += -MD -MP -MF $(BIN)/dep/$(@).d -MQ $(@)
 # Prevent promoting floats to doubles
 CFLAGS += -Wdouble-promotion
-
-DEFS += $(C_PROFILE)
-CPPWARN += -Wall -Wmissing-braces -Wextra -Wdouble-promotion
-CPPFLAGS += -MD -MP -MF $(BIN)/dep/$(@).d -MQ $(@)
+CPPWARN +=  -Wdouble-promotion
+#Permits to remove un-used functions and global variables from output file
 OPT +=  -fno-strict-aliasing -ffunction-sections -fdata-sections -fno-common
+
+CFLAGS += $(OPT) $(DEFS)
 
 # C++ specific options
 CPP_OPT += -std=gnu++11
@@ -302,7 +301,7 @@ CPP_OPT += -fno-rtti
 # omit teardown code
 CPP_OPT += -fno-use-cxa-atexit
 CPP_OPT += -fno-exceptions -fno-unwind-tables -fno-threadsafe-statics
-CPPFLAGS += $(OPT) $(CPP_OPT) $(CPPWARN) $(PROCESSOR) $(INCLUDES) $(INCLUDES_CF2) $(DEFS)
+CPPFLAGS += $(OPT) $(CPP_OPT) $(CPPWARN) $(DEFS)
 
 ASFLAGS = $(PROCESSOR) $(INCLUDES)
 LDFLAGS = --specs=nano.specs $(PROCESSOR) -Wl,-Map=$(PROG).map,--cref,--gc-sections,--undefined=uxTopUsedPriority
