@@ -44,7 +44,8 @@ endif
 ifeq ($(PLATFORM), CF2)
 # Now needed for SYSLINK
 DEFS += -DUSE_RADIOLINK_CRTP     # Set CRTP link to radio
-DEFS += -DENABLE_UART          # To enable the uart
+DEFS += -DENABLE_UART1          # To enable the uart
+DEFS += -DDEBUG_PRINT_ON_UART
 REV               ?= D
 endif
 
