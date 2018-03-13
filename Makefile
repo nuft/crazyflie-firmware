@@ -104,6 +104,7 @@ endif
 
 # Crazyflie sources
 VPATH += src/init src/hal/src src/modules/src src/utils/src src/drivers/bosch/src src/drivers/src
+VPATH += src/app
 VPATH_CF2 += src/platform/cf2
 
 ifeq ($(PLATFORM), CF2)
@@ -137,6 +138,7 @@ PROJ_OBJ_CF2 +=  sensors_$(SENSORS).o
 PROJ_OBJ_CF2 += libdw1000.o libdw1000Spi.o
 
 # Modules
+PROJ_OBJ += hello.o
 PROJ_OBJ += system.o comm.o console.o pid.o crtpservice.o param.o
 PROJ_OBJ += log.o worker.o trigger.o sitaw.o queuemonitor.o msp.o
 PROJ_OBJ_CF2 += platformservice.o sound_cf2.o extrx.o sysload.o mem_cf2.o
@@ -217,6 +219,7 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 GDB = $(CROSS_COMPILE)gdb
 
 INCLUDES  = -I$(FREERTOS)/include -I$(PORT) -Isrc
+INCLUDES += -Isrc/app
 INCLUDES += -Isrc/config -Isrc/hal/interface -Isrc/modules/interface
 INCLUDES += -Isrc/utils/interface -Isrc/drivers/interface -Isrc/platform
 INCLUDES += -Ivendor/CMSIS/CMSIS/Include -Isrc/drivers/bosch/interface
