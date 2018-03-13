@@ -213,7 +213,9 @@ endif
 ############### Compilation configuration ################
 AS = $(CROSS_COMPILE)as
 CC = $(CROSS_COMPILE)gcc
-LD = $(CROSS_COMPILE)gcc
+CPPC = $(CROSS_COMPILE)g++
+#LD = $(CROSS_COMPILE)gcc
+LD = $(CROSS_COMPILE)g++
 SIZE = $(CROSS_COMPILE)size
 OBJCOPY = $(CROSS_COMPILE)objcopy
 GDB = $(CROSS_COMPILE)gdb
