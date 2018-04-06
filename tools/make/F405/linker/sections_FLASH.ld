@@ -27,6 +27,18 @@ SECTIONS
 	. = ALIGN(4);
     } >FLASH
 
+    /* Flash region to be used for constructors and destructors.*/
+    .xtors : ALIGN(4)
+    {
+        __init_array_start = .;
+        KEEP(*(SORT(.init_array.*)))
+        KEEP(*(.init_array))
+        __init_array_end = .;
+        __fini_array_start = .;
+        KEEP(*(.fini_array))
+        KEEP(*(SORT(.fini_array.*)))
+        __fini_array_end = .;
+    } > FLASH
 
     /* the program code is stored in the .text section, which goes to Flash */
     .text :

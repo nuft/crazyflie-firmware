@@ -42,8 +42,21 @@
 /* ST includes */
 #include "stm32fxxx.h"
 
+extern void(*__init_array_start []) (void) __attribute__((weak));
+extern void(*__init_array_end []) (void) __attribute__((weak));
+
+static void __libc_init_array(void)
+{
+    void (**fn)(void);;
+    for (fn = __init_array_start; fn < __init_array_end; fn++) {
+        (*fn)();
+    }
+}
+
 int main() 
 {
+  __libc_init_array();
+
   //Initialize the platform.
   platformInit();
 
