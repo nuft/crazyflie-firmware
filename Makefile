@@ -255,7 +255,8 @@ ifeq ($(DEBUG), 1)
   OPT += -O0 -g3 -DDEBUG
 else
 	# Fail on warnings
-  OPT += -Os -g3 -Werror
+  # OPT += -Werror
+  OPT += -Os -g3
 endif
 
 ifeq ($(LTO), 1)
