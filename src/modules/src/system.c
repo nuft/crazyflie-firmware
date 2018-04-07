@@ -63,7 +63,7 @@
 #include "sysload.h"
 #include "deck.h"
 #include "extrx.h"
-#include "hello.h"
+#include "demo.h"
 
 /* Private variable */
 static bool selftestPassed;
@@ -115,7 +115,8 @@ void systemInit(void)
   ledseqInit();
   pmInit();
   buzzerInit();
-  helloInit();
+
+  demoInit(); // demo thread
 
   isInit = true;
 }

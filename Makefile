@@ -17,7 +17,7 @@ CROSS_COMPILE     ?= arm-none-eabi-
 PYTHON2           ?= python2
 DFU_UTIL          ?= dfu-util
 CLOAD             ?= 1
-DEBUG             ?= 0
+DEBUG             ?= 1
 CLOAD_SCRIPT      ?= python3 -m cfloader
 CLOAD_CMDS        ?=
 CLOAD_ARGS        ?=
@@ -116,7 +116,8 @@ endif
 ############### Source files configuration ################
 
 # Custom Application
-PROJ_OBJ += hello_cpp.o
+PROJ_OBJ += demo.o
+PROJ_OBJ += syscalls.o
 # PROJ_OBJ += hello.o
 
 # Init

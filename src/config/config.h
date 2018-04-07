@@ -92,6 +92,7 @@
 #define USDWRITE_TASK_PRI       0
 #define PCA9685_TASK_PRI        3
 #define HELLO_TASK_PRI          1
+#define DEMO_TASK_PRI           4
 
 #define SYSLINK_TASK_PRI        5
 #define USBLINK_TASK_PRI        3
@@ -127,6 +128,7 @@
 #define USDWRITE_TASK_NAME      "USDWRITE"
 #define PCA9685_TASK_NAME       "PCA9685"
 #define HELLO_TASK_NAME         "HELLO"
+#define DEMO_TASK_NAME          "DEMO"
 
 //Task stack sizes
 #define SYSTEM_TASK_STACKSIZE         (2* configMINIMAL_STACK_SIZE)
@@ -152,6 +154,7 @@
 #define USDWRITE_TASK_STACKSIZE       (2 * configMINIMAL_STACK_SIZE)
 #define PCA9685_TASK_STACKSIZE        (2 * configMINIMAL_STACK_SIZE)
 #define HELLO_TASK_STACKSIZE          configMINIMAL_STACK_SIZE
+#define DEMO_TASK_STACKSIZE           (10 * configMINIMAL_STACK_SIZE)
 
 //The radio channel. From 0 to 125
 #define RADIO_CHANNEL 80
