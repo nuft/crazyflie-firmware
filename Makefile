@@ -225,6 +225,7 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 GDB = $(CROSS_COMPILE)gdb
 
 INCLUDES  = -I$(FREERTOS)/include -I$(PORT) -Isrc
+INCLUDES += -Isrc/lib/eigen
 INCLUDES += -Isrc/app
 INCLUDES += -Isrc/config -Isrc/hal/interface -Isrc/modules/interface
 INCLUDES += -Isrc/utils/interface -Isrc/drivers/interface -Isrc/platform
