@@ -10,3 +10,6 @@
 [submodule "vendor/CMSIS"]
 	path = vendor/CMSIS
 	url = https://github.com/ARM-software/CMSIS
+[submodule "src/lib/eigen"]
+	path = src/lib/eigen
+	url = https://github.com/eigenteam/eigen-git-mirror
