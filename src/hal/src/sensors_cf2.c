@@ -102,6 +102,8 @@ typedef struct
 
 static xQueueHandle accelerometerDataQueue;
 static xQueueHandle gyroDataQueue;
+static xQueueHandle accelerometerDataQueueCopy;
+static xQueueHandle gyroDataQueueCopy;
 static xQueueHandle magnetometerDataQueue;
 static xQueueHandle barometerDataQueue;
 static xSemaphoreHandle sensorsDataReady;
@@ -169,6 +171,16 @@ bool sensorsReadAcc(Axis3f *acc)
   return (pdTRUE == xQueueReceive(accelerometerDataQueue, acc, 0));
 }
 
+bool sensorsReadGyroCopy(Axis3f *gyro)
+{
+  return (pdTRUE == xQueueReceive(gyroDataQueueCopy, gyro, 0));
+}
+
+bool sensorsReadAccCopy(Axis3f *acc)
+{
+  return (pdTRUE == xQueueReceive(accelerometerDataQueueCopy, acc, 0));
+}
+
 bool sensorsReadMag(Axis3f *mag)
 {
   return (pdTRUE == xQueueReceive(magnetometerDataQueue, mag, 0));
@@ -223,6 +235,8 @@ static void sensorsTask(void *param)
       vTaskSuspendAll(); // ensure all queues are populated at the same time
       xQueueOverwrite(accelerometerDataQueue, &sensors.acc);
       xQueueOverwrite(gyroDataQueue, &sensors.gyro);
+      xQueueOverwrite(accelerometerDataQueueCopy, &sensors.acc);
+      xQueueOverwrite(gyroDataQueueCopy, &sensors.gyro);
       if (isMagnetometerPresent)
       {
         xQueueOverwrite(magnetometerDataQueue, &sensors.mag);
@@ -464,6 +478,8 @@ static void sensorsTaskInit(void)
 {
   accelerometerDataQueue = xQueueCreate(1, sizeof(Axis3f));
   gyroDataQueue = xQueueCreate(1, sizeof(Axis3f));
+  accelerometerDataQueueCopy = xQueueCreate(1, sizeof(Axis3f));
+  gyroDataQueueCopy = xQueueCreate(1, sizeof(Axis3f));
   magnetometerDataQueue = xQueueCreate(1, sizeof(Axis3f));
   barometerDataQueue = xQueueCreate(1, sizeof(baro_t));
 

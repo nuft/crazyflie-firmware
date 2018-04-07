@@ -46,4 +46,7 @@ bool sensorsReadAcc(Axis3f *acc);
 bool sensorsReadMag(Axis3f *mag);
 bool sensorsReadBaro(baro_t *baro);
 
+bool sensorsReadGyroCopy(Axis3f *gyro);
+bool sensorsReadAccCopy(Axis3f *acc);
+
 #endif //__SENSORS_H__
