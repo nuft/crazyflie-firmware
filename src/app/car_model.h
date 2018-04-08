@@ -21,7 +21,7 @@ public:
     using ProcessNoiseCov = Eigen::Matrix<float, 4, 4>;
 
     ProcessNoiseCov Q;
-    const float B =  0.1; // [m] base distance between front and back wheel
+    const float B =  0.1f; // [m] base distance between front and back wheel
 
     Dynamics()
     {
@@ -52,7 +52,7 @@ public:
         J.coeffRef(0, 3) = -u.v * st;
         J.coeffRef(1, 2) = st;
         J.coeffRef(1, 3) = u.v * ct;
-        J.coeffRef(3, 2) = 1 / B * tanf(u.phi);
+        J.coeffRef(3, 2) = tanf(u.phi) / B;
         return J;
     }
 };
@@ -71,7 +71,7 @@ struct Observation {
     Observation()
     {
         R.setZero();
-        R.diagonal() << 2e-6f, 2e-6, 2e-4, 5e-5;
+        R.diagonal() << 2e-6f, 2e-6f, 2e-4f, 5e-5f;
     }
 
     Measurement operator()(const State &x)
