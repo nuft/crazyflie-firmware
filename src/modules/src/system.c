@@ -160,7 +160,8 @@ void systemTask(void *arg)
   StateEstimatorType estimator = anyEstimator;
   deckInit();
   estimator = deckGetRequiredEstimator();
-  stabilizerInit(estimator);
+  // stabilizerInit(estimator);
+  sensorsInit();
   if (deckGetRequiredLowInterferenceRadioMode())
   {
     platformSetLowInterferenceRadioMode();
@@ -177,7 +178,8 @@ void systemTask(void *arg)
   pass &= configblockTest();
   pass &= commTest();
   pass &= commanderTest();
-  pass &= stabilizerTest();
+  // pass &= stabilizerTest();
+  pass &= sensorsTest();
   pass &= deckTest();
   pass &= soundTest();
   pass &= memTest();

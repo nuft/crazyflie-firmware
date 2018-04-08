@@ -17,7 +17,7 @@ CROSS_COMPILE     ?= arm-none-eabi-
 PYTHON2           ?= python2
 DFU_UTIL          ?= dfu-util
 CLOAD             ?= 1
-DEBUG             ?= 1
+DEBUG             ?= 0
 CLOAD_SCRIPT      ?= python3 -m cfloader
 CLOAD_CMDS        ?=
 CLOAD_ARGS        ?=
@@ -118,6 +118,7 @@ endif
 # Custom Application
 PROJ_OBJ += demo.o
 PROJ_OBJ += syscalls.o
+PROJ_OBJ += benchmark.o
 # PROJ_OBJ += hello.o
 
 # Init
@@ -169,6 +170,7 @@ PROJ_OBJ_CF2 += deck_analog.o
 PROJ_OBJ_CF2 += deck_spi.o
 
 # Decks
+DEFS += -DIGNORE_OW_DECKS
 PROJ_OBJ_CF2 += bigquad.o
 PROJ_OBJ_CF2 += rzr.o
 PROJ_OBJ_CF2 += ledring12.o
