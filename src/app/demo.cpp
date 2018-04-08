@@ -13,10 +13,15 @@ extern "C" {
 
 #define eigen_assert(x)
 #define EIGEN_NO_MALLOC
+
 #include <Eigen/Dense>
 #include "../../../Kalman/ExtendedKalmanFilter.h"
 #include "car_model.h"
+
+// #define BENCHMARK
+#ifdef BENCHMARK
 #include "benchmark.h"
+#endif
 
 float log_x = 0;
 float log_y = 0;
@@ -25,9 +30,9 @@ float log_theta = 0;
 
 namespace demo {
 
-#define ESTIMATOR_UPDATE_RATE 10.0f // [Hz]
+#define ESTIMATOR_UPDATE_RATE 250.0f // [Hz]
 #define STANDARD_GRAVITY 9.80665f // [m/s^2]
-#define DEG2RAD (M_PI / 180.f)
+#define DEG2RAD ((float)M_PI / 180.f)
 
 using EKF = kalmanfilter::ExtendedKalmanFilter<Dynamics, Observation, kalmanfilter::EULER>;
 
@@ -38,7 +43,7 @@ void main(void *param)
 
     TickType_t last_update;
 
-    // // Wait for the system to be fully started to start stabilization loop
+    // Wait for the system to be fully started to start stabilization loop
     systemWaitStart();
 
     // Wait for sensors to be calibrated
@@ -64,7 +69,6 @@ void main(void *param)
     DEBUG_PRINT("Start EKF\n");
     last_update = xTaskGetTickCount();
     while (1) {
-        uint32_t count;
         ledSet(LED_GREEN_L, 1); // for time measurement & debugging
 
         Axis3f g, a;
@@ -80,18 +84,24 @@ void main(void *param)
                                   STANDARD_GRAVITY * a.y,
                                   DEG2RAD * g.z,
                                   Ts);
+#ifdef BENCHMARK
+        uint32_t count;
         // Prevent the RTOS kernel swapping out the task.
         // vTaskSuspendAll();
         taskENTER_CRITICAL();
         cycle_counter_reset();
+#endif
 
         x = ekf.update(u, z, Ts);
 
 
+#ifdef BENCHMARK
         count = cycle_counter_get();
         // Resume the RTOS kernel.
         // xTaskResumeAll();
         taskEXIT_CRITICAL();
+        DEBUG_PRINT("EKF update nb cycles: %lu\n", count);
+#endif
 
         ledSet(LED_GREEN_L, 0);
 
@@ -100,13 +110,12 @@ void main(void *param)
         log_v = x(2);
         log_theta = x(3);
 
-        DEBUG_PRINT("EKF update nb cycles: %lu\n", count);
 
-        static int i = 0;
-        if (i++ > (int)(ESTIMATOR_UPDATE_RATE/10)) {
-            i = 0;
-            DEBUG_PRINT("%f %f %f %f\n", (double)x[0], (double)x[1], (double)x[2], (double)x[3]);
-        }
+        // static int i = 0;
+        // if (i++ > (int)(ESTIMATOR_UPDATE_RATE/10)) {
+        //     i = 0;
+        //     DEBUG_PRINT("%f %f %f %f\n", (double)x[0], (double)x[1], (double)x[2], (double)x[3]);
+        // }
 
         vTaskDelayUntil(&last_update, F2T(ESTIMATOR_UPDATE_RATE));
     }
